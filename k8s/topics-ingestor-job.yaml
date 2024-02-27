@@ -1,0 +1,11 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topics-ingestor
+spec:
+  template:
+    spec:
+      containers:
+      - name: topics-ingestor
+        image: tzachioy/twitterinsightservice1-topics_ingestor-job:latest
+      restartPolicy: Never

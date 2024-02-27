@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trends_public_api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trends_public_api
+  template:
+    metadata:
+      labels:
+        app: trends_public_api
+    spec:
+      containers:
+      - name: trends_public_api
+        image: tzachioy/twitterinsightservice1-trends-public-api-service:latest
+        ports:
+        - containerPort: 80
+        resources:
+          # Resource limits and requests for the container
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"

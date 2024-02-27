@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cass_cluster
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cass_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+
+volumes:
+  cassandra_data:

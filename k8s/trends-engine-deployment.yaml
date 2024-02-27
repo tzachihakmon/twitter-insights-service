@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trends-engine-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: trends-engine
+  template:
+    metadata:
+      labels:
+        app: trends-engine
+    spec:
+      containers:
+      - name: trends-engine
+        image: your-trends-engine-image:latest ##### replace with imgage!!
+        ports:
+        - containerPort: 5001 # the port each pod listenst

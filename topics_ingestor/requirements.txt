@@ -1,0 +1,4 @@
+spacy
+cassandra-driver
+python-dateutil
+gevent

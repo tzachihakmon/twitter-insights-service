@@ -1,0 +1,18 @@
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/twitter-app/public-api
+
+# Copy the current directory contents into the container at /usr/src/app
+COPY ./trends_public_api_service .
+COPY ./topic_repository_module .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
+CMD ["python", "trends_public_api.py"]
