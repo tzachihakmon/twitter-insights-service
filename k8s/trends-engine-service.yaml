@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: trends-engine-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP  # Default type, makes the service only reachable within the cluste
   selector:
     app: trends-engine
   ports:
-  - port: 80 # The port the service listens on
-    targetPort: 5001 # The port on the pod to forward traffic to - should be equal to what define on flask
+  - port: 5001 # The port the service listens on
+    targetPort: 80 # The port on the pod to forward traffic to - should be equal to what define on flask

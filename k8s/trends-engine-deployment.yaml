@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: trends-engine-deployment
 spec:
-  replicas: 3
+  replicas: 3 
   selector:
     matchLabels:
       app: trends-engine
@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
       - name: trends-engine
-        image: your-trends-engine-image:latest ##### replace with imgage!!
+        image: tzachioy/twitterinsightservice1-trends-engine-service:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 5001 # the port each pod listenst
+        - containerPort: 80 # specifies which port the container within the Pod is listening on. This does not expose the port outside of the cluster or even outside of the Pod; it merely indicates to Kubernetes and to anyone reading the manifest which port the application inside the container is configured to listen on.

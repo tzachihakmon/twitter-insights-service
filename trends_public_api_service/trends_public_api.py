@@ -1,19 +1,18 @@
 from flask import Flask, request, jsonify
-#import sys
-#sys.path.append('C:/src/flask-app/topic_repository_module')
 from TopicRepositoryModule import TopicsRepository  # Adjust the import statement based on your actual module name and location
 from datetime import datetime
 import requests
 
 app = Flask(__name__)
-topics_repository = None
+topics_repository = TopicsRepository()
 
 @app.route('/hello_world', methods=['GET'])
+def hello_world():
+    return 'Hello, World!'
+
 
 @app.route('/topics/<topic>', methods=['GET'])
 def get_topic_appearances(topic):
-    if(topics_repository == None):
-        topics_repository = TopicsRepository()
     year = request.args.get('year')
     start_month = request.args.get('startmonth')
     end_month = request.args.get('endmonth')
@@ -57,7 +56,7 @@ def get_k_topics_by_date():
         return jsonify({"error": str(e)}), 400
 
     try:
-        url = 'http://127.0.0.1:5001/get_k_topics_by_date'  # Adjust the URL based on your setup
+        url = 'http://trends-engine-service:5001/get_k_topics_by_date'  # Adjust the URL based on your setup
         print(k, start_date.strftime("%Y%m%d"),end_date.strftime("%Y%m%d"))
         params = {
             'k': k,

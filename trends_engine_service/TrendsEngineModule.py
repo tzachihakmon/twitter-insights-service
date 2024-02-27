@@ -1,7 +1,5 @@
 from dataclasses import dataclass , field
 from datetime import datetime, timedelta
-import sys
-sys.path.append('C:/src/flask-app/topic_repository_module')
 from TopicRepositoryModule import TopicsRepository
 EXCLUDE_PHRASES = {"less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
 
