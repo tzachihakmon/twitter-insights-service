@@ -14,22 +14,32 @@ def hello_world():
 @app.route('/topics/<topic>', methods=['GET'])
 def get_topic_appearances(topic):
     year = request.args.get('year')
-    start_month = request.args.get('startmonth')
-    end_month = request.args.get('endmonth')
-    print(f"Got request with: year:{year} start_month:{start_month} end_month:{end_month}")
-    if not all([year, start_month, end_month]):
+    print(f"Got topic trend request with: year:{year} for topic:{topic}.")
+    if not all([year, topic]):
         return jsonify({"error": "Missing query parameters: year, startmonth, and/or endmonth are required."}), 400
 
     try:
-        # Convert parameters to integers for the database query
         year = int(year)
-        start_month = int(start_month)
-        end_month = int(end_month)
     except ValueError:
-        return jsonify({"error": "Query parameters year, startmonth, and endmonth must be integers."}), 400
+        return jsonify({"error": "Query parameter year must be integer."}), 400
 
-    data = topics_repository.get_all_topics_appearences(topic, year, start_month, end_month)
-    return jsonify(data)
+    try:
+        url = 'http://trends-engine-service:5001/get_topic_trend'  # Adjust the URL based on your setup
+        params = {
+            'topic': topic,
+            'year': year,
+        }
+        print(f"out going request to: {url} with params: {params}")
+        response = requests.get(url, params=params)
+        
+        # Extract only the trend_score from each topic stats
+        topic_stats = response.json()
+        trend_scores_only = [{'topic': ts['topic'], 'trend_score': ts['trend_score']} for ts in topic_stats]
+        
+        return jsonify(trend_scores_only), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"public: Failed to fetch topics: {e}"}), 500
 
 @app.route('/get_k_topics_by_date', methods=['GET'])
 def get_k_topics_by_date():
