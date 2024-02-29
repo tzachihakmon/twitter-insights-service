@@ -1,3 +1,6 @@
+Flask
+datetime
+requests
 gevent
 cassandra-driver
 dataclasses

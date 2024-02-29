@@ -1,10 +1,12 @@
 from dataclasses import dataclass , field
 from datetime import datetime, timedelta
-from TopicRepositoryModule import TopicsRepository
+import requests
 import os
 
 exclude_phrases_str = os.getenv("exclude_phrases", "")
 EXCLUDE_PHRASES = set(exclude_phrases_str.split(",")) if exclude_phrases_str != "" else {"twitter", "midnight", "10","two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday","weekend", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
+TOPICS_REPOSITORY_SERVICE_NAME = os.getenv("topic_repository_service_name", "topic-repository-service")
+TOPICS_REPOSITORY_SERVICE_PORT = os.getenv("topic_repository_servce_port", "5002")
 
 @dataclass
 class TopicStats:
@@ -34,9 +36,6 @@ class TopicScore:
     trend_score: float= 0
 
 class TopicsTrendsEngine:
-    def __init__(self):
-        self.topic_repository = TopicsRepository()
-
     def get_k_most_trend_topics(self, k, start_date, end_date):
         all_topics_stats = self._aggregate_topic_stats(start_date, end_date)
         # Calculate scores and sort
@@ -55,10 +54,11 @@ class TopicsTrendsEngine:
 
     def get_topic_trend_by_year(self, topic, year):
         topic_appearences_by_months = {i : TopicStats(topic = topic) for i in range (1,13)}
-        topic_appearences = self.topic_repository.get_single_topic_trend(year, topic)
+        topic_appearences = self.get_topic_appearances(topic, year)
         for appearence in topic_appearences:
-            month = int(appearence.month)
-            topic_appearences_by_months[month].add_tweet(appearence.author, appearence.likes, appearence.shares)
+            print(appearence)
+            month = int(appearence['month'])
+            topic_appearences_by_months[month].add_tweet(appearence['author'], appearence['likes'], appearence['shares'])
         
         most_shares = max(stats.total_shares for stats in topic_appearences_by_months.values())
         most_likes = max(stats.total_likes for stats in topic_appearences_by_months.values())
@@ -73,6 +73,21 @@ class TopicsTrendsEngine:
 
 
         return months_to_topic_score
+
+    def get_topic_appearances(self, topic, year):
+        url = f'http://{TOPICS_REPOSITORY_SERVICE_NAME}:{TOPICS_REPOSITORY_SERVICE_PORT}/repotopics/get_single_topic_trend'  # Adjust the URL based on your setup
+        params = {
+            'year': year,
+            'topic': topic,
+        }
+        print(f"out going request to: {url} with params: {params}")
+        response = requests.get(url, params=params)
+        if(response.status_code != 200):
+            raise Exception("TrendsEngine: Failed to get topic year trend from repository.")
+        
+        raw_topic_appearences = response.json()
+        return [{"topic": topic_stats[0], "month":topic_stats[1], "author": topic_stats[2], "likes": topic_stats[3],  "shares": topic_stats[4]} for topic_stats in raw_topic_appearences]
+
     
     def _aggregate_topic_stats(self, start_date, end_date):
         # Assuming start_date and end_date are datetime.date objects
@@ -81,15 +96,32 @@ class TopicsTrendsEngine:
 
         for start, end in month_ranges:
             print(f"Calling get_topics_by_month with: {start.year, start.month, start.day, end.day}")
-            result = self.topic_repository.get_topics_by_month(start.year,start.month, start.day, end.day)
+            result = self._get_topics_by_month(start.year, start.month, start.day, end.day)
             for row in result:
-                if(row.topic not in EXCLUDE_PHRASES):
-                    if row.topic not in topic_stats:
-                        print(f"inserting topic: {row.topic}")
-                        topic_stats[row.topic] = TopicStats(topic=row.topic)
-                    topic_stats[row.topic].add_tweet(row.author, row.likes, row.shares)
+                topic = row["topic"]
+                if(topic not in EXCLUDE_PHRASES):
+                    if topic not in topic_stats:
+                        print(f"inserting topic: {topic}")
+                        topic_stats[topic] = TopicStats(topic=topic)
+                    topic_stats[topic].add_tweet(row["author"], row["likes"], row["shares"])
         print(f"_aggregate_topic_stats:: returning topic stats: {len(topic_stats)}")
         return topic_stats
+
+    def _get_topics_by_month(self, year, month, start_day, end_day):
+        url = f'http://{TOPICS_REPOSITORY_SERVICE_NAME}:{TOPICS_REPOSITORY_SERVICE_PORT}/repotopics/get_topics_by_month'  # Adjust the URL based on your setup
+        params = {
+            'year': year,
+            'month': month,
+            'start_day': start_day,
+            'end_day': end_day
+        }
+        print(f"out going request to: {url} with params: {params}")
+        response = requests.get(url, params=params)
+        if(response.status_code != 200):
+            raise Exception("TrendsEngine: Failed to get topics by month from repository.")
+        
+        json = response.json()
+        return [{"topic": topic_stats[0], "author": topic_stats[1], "likes": topic_stats[2],  "shares": topic_stats[3]} for topic_stats in json]
 
     @staticmethod
     def _get_month_ranges(start_date, end_date):

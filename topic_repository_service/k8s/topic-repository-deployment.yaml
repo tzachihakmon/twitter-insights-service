@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: topic-repository-deployment
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: topic-repository
+  template:
+    metadata:
+      labels:
+        app: topic-repository
+    spec:
+      containers:
+      - name: topic-repository
+        image: tzachioy/twitterinsightservice1-topic-repository-service:latest
+        envFrom:
+          - configMapRef:
+              name: topic-repository-config
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80 # specifies which port the container within the Pod is listening on. This does not expose the port outside of the cluster or even outside of the Pod; it merely indicates to Kubernetes and to anyone reading the manifest which port the application inside the container is configured to listen on.
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"

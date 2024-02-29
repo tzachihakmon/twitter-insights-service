@@ -2,10 +2,13 @@ from dateutil.parser import parse
 import spacy
 import re
 from TweetsRepositoryModule import TweetsRepository
+import requests
 from TopicRepositoryModule import Topic
-from TopicRepositoryModule import TopicsRepository
+import os
 
 nlp = spacy.load("en_core_web_sm")
+TOPICS_REPOSITORY_SERVICE_NAME = os.getenv("topic_repository_service_name", "topic-repository-service")
+TOPICS_REPOSITORY_SERVICE_PORT = os.getenv("topic_repository_servce_port", "5002")
 
 def extract_topics_from_tweet(content):
     doc = nlp(content)
@@ -45,19 +48,22 @@ def get_topics(tweet):
 
 def PopulateCassandraTopicsTables():
     tweets_repo = TweetsRepository()
-    topic_repo = TopicsRepository()
     i = 0
     distinct_topics = set()
     inserted = 0
     for tweet in tweets_repo.get_tweets():
         topics = get_topics(tweet)
-        topic_repo.insert_topics(topics)
+        insert_topics(topics)
         for topic in topics:
             distinct_topics.add(topic.topic)
         inserted += len(topics)
         if (i%1000==0):
             print(f"{i} tweets proceed. Number of distinct topics: {len(distinct_topics)}. Number of inserted topics: {inserted}")
         i+=1
+
+def insert_topics(topics):
+    url = f'http://{TOPICS_REPOSITORY_SERVICE_NAME}:{TOPICS_REPOSITORY_SERVICE_PORT}/repotopics/insert_topics'  # Adjust the URL based on your setup
+    requests.post(url, json=topics)
 
 def main():
     PopulateCassandraTopicsTables()
