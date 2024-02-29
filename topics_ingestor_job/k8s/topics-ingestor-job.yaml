@@ -8,4 +8,7 @@ spec:
       containers:
       - name: topics-ingestor
         image: tzachioy/twitterinsightservice1-topics_ingestor-job:latest
+        envFrom:
+          - configMapRef:
+              name: topic-repository-configmap
       restartPolicy: Never

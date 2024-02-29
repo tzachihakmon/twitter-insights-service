@@ -6,10 +6,10 @@ from cassandra.cluster import Cluster
 import os
 from dataclasses import dataclass
 
-CASSANDRA_HOSTS =  [os.getenv('CASSANDRA_HOST', 'cassandra')] #  ["127.0.0.1"]  # Assuming 'cassandra' is the name of your Cassandra service in Kubernetes
-KEYSPACE = "tweets_topics_1"
-topic_trends_table = "topic_trends3"
-topics_by_time_table = "topics_by_time4"
+CASSANDRA_HOSTS =  [os.getenv('cassandra_host', 'cassandra')] #  ["127.0.0.1"]  # Assuming 'cassandra' is the name of your Cassandra service in Kubernetes
+KEYSPACE = os.getenv('cassandra_topics_key_space', 'tweets_topics_1')
+topic_trends_table = os.getenv('cassandra_topics_trends_table', 'topic_trends3')
+topics_by_time_table = os.getenv('cassandra_topics_by_time_table', 'topics_by_time4')  
 
 @dataclass
 class Topic:
@@ -24,10 +24,12 @@ class Topic:
     shares: int
 
 def CreateKeySpaceIfNotExist(session):
-        session.execute(f"""
+        query = f"""
         CREATE KEYSPACE IF NOT EXISTS {KEYSPACE} 
         WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': 1}};
-        """)
+        """
+        print(f"About to create key space if not exist. with query: {query}")
+        session.execute(query)
 
 def CreateTables(session):
     session.execute(f"""
@@ -111,6 +113,17 @@ class TopicsRepository:
         SELECT topic, author, likes, shares
         FROM {topics_by_time_table}
         WHERE year = {year} AND month = {month} AND day>={start_day} AND day <= {end_day}
+        """
+
+        print(f"About to invoke query:\n{query}")
+        return invoke_query(self.session, query)
+    
+    def get_single_topic_trend(self, year,  topic):
+        # Adjust the query to fetch required details for trend calculation
+        query = f"""
+        SELECT topic, month, author, likes, shares
+        FROM {topic_trends_table}
+        WHERE topic = '{topic}' AND year = {year}
         """
 
         print(f"About to invoke query:\n{query}")

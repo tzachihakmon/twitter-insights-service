@@ -5,11 +5,11 @@ From the repo root dir open pwsh an run:
 
 ## build images
 ### ingestor
-- docker build -f topics_ingestor/Dockerfile.topics_ingestor -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
+- docker build -f topics_ingestor/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
 ### public- api
-- docker build -f trends_public_api_service/Dockerfile.topics_public_api -t {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-servic
+- docker build -f trends_public_api_service/Dockerfile -t {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-servic
 ### trends-engine
-docker build --no-cache -f trends_engine_service/Dockerfile.trends_engine -t tzachioy/twitterinsightservice1-trends-engine-service .
+docker build --no-cache -f trends_engine_service/Dockerfile -t tzachioy/twitterinsightservice1-trends-engine-service .
 
 ## Publish images to docker hub repository
 ### ingestor
@@ -18,33 +18,58 @@ docker build --no-cache -f trends_engine_service/Dockerfile.trends_engine -t tza
 - docker push {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-servic
 ### trends-engine
 - docker push tzachioy/twitterinsightservice1-trends-engine-service
+
 # k8s steps:
 ## initial cassandra cluster: 
-kubectl apply -f k8s/cassandra-statefulset.yaml
+kubectl apply -f cassandra/k8s/cassandra-statefulset.yaml
 
 ## Check that cassandra running gracefully with 
 kubectl get pods 
 kubectl get services
 
 ## initial topic ingestor job
-kubectl apply -f k8s/topics-ingestor-job.yaml
+kubectl apply -f k8s/topic-repository-configmap.yaml
+kubectl apply -f topics_ingestor_job/k8s/topics-ingestor-job.yaml
 kubectl get jobs
 kubectl get pods 
 kubectl logs topics-ingestor{some_prfix taken from get pods }
 
-## initial public api service
-kubectl apply -f k8s/trends-public-api-deployment.yaml
-kubectl apply -f k8s/trends-public-api-service.yaml
+## deploy public api service
+kubectl apply -f trends_public_api_service/k8s/trends-public-api-configmap.yaml
+kubectl apply -f trends_public_api_service/k8s/trends-public-api-deployment.yaml
+kubectl apply -f trends_public_api_service/k8s/trends-public-api-service.yaml
+kubectl get deployments
+kubectl get pods
+kubectl get services
+kubectl logs trends-public-api-deployment-{some_prfix taken from get pods }
+trends-public-api-configmap
+
+## deploy engine service
+kubectl apply -f k8s/topic-repository-configmap.yaml
+kubectl apply -f trends_engine_service/k8s/trends-engine-configmap.yaml
+kubectl apply -f trends_engine_service/k8s/trends-engine-deployment.yaml
+kubectl apply -f trends_engine_service/k8s/trends-engine-service.yaml
 kubectl get deployments
 kubectl get pods
 kubectl get services
 kubectl logs trends-public-api-deployment-{some_prfix taken from get pods }
 
+## deploy ingress
+### Pre-requisites:
+1. From Adminstrator power shell - install chocolatey its package managment for windows: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-## initial test engine service
-kubectl apply -f k8s/trends-engine-deployment.yaml
-kubectl apply -f k8s/trends-engine-service.yaml
-kubectl get deployments
-kubectl get pods
-kubectl get services
-kubectl logs trends-public-api-deployment-{some_prfix taken from get pods }
+2. After u installed chocolatey install helm by it:
+choco install kubernetes-helm
+
+3. Install ngins-ingress:
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+### deployment 
+1. install nginx-ingress Conroller:
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace kube-system
+2. kubectl apply -f ingressclass.yam
+3. kubectl apply -f k8s/ingress.yaml
+4. check logs: 
+kubectl get pods --all-namespaces
+kubectl logs {nginx_pod_name} -n kube-system

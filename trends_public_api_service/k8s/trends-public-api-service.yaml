@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: trends-public-api-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80
-    targetPort: 80 # This is the port on the Pod that the Service forwards traffic to. It should match the 
+    targetPort: 80
   selector:
     app: trends-public-api

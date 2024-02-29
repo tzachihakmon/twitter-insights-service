@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: twitter-inisghts-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx  # This line specifies the IngressClass
+  rules:
+  - http:
+      paths:
+      - path: /topics(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: trends-public-api-service
+            port:
+              number: 80
+      - path: /tweets(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: trends-public-api-service
+            port:
+              number: 80

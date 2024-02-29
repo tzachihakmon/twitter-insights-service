@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trends-public-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trends-public-api
+  template:
+    metadata:
+      labels:
+        app: trends-public-api
+    spec:
+      containers:
+      - name: trends-public-api
+        image: tzachioy/twitterinsightservice1-trends-public-api-service:latest
+        env:
+        - name: TRENDS_ENGINE_SRVICE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: trends_engine_internal_api_service_name
+        - name: TRENDS_ENGINE_SRVICE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: trends_engine_internal_api_service_port
+        ports:
+        - containerPort: 80 # specifies which port the container within the Pod is listening on. This does not expose the port outside of the cluster or even outside of the Pod; it merely indicates to Kubernetes and to anyone reading the manifest which port the application inside the container is configured to listen on.
+        resources:
+          # Resource limits and requests for the container
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"

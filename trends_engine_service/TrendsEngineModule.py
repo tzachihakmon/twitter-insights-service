@@ -1,7 +1,10 @@
 from dataclasses import dataclass , field
 from datetime import datetime, timedelta
 from TopicRepositoryModule import TopicsRepository
-EXCLUDE_PHRASES = {"today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
+import os
+
+exclude_phrases_str = os.getenv("exclude_phrases", "")
+EXCLUDE_PHRASES = set(exclude_phrases_str.split(",")) if exclude_phrases_str != "" else {"twitter", "midnight", "10","two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday","weekend", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
 
 @dataclass
 class TopicStats:

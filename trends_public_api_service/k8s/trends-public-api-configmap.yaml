@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  trends_engine_internal_api_service_name: "trends-engine-service"
+  trends_engine_internal_api_service_port: "5001"

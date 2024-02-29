@@ -2,29 +2,27 @@ from flask import Flask, request, jsonify
 from TopicRepositoryModule import TopicsRepository  # Adjust the import statement based on your actual module name and location
 from datetime import datetime
 import requests
+import os
 
 app = Flask(__name__)
 topics_repository = TopicsRepository()
-
-@app.route('/hello_world', methods=['GET'])
-def hello_world():
-    return 'Hello, World!'
-
+TRENDS_ENGINE_SERVICE_NAME = os.getenv("TRENDS_ENGINE_SRVICE_NAME")
+TRENDS_ENGINE_SERVICE_PORT = os.getenv("TRENDS_ENGINE_SRVICE_PORT")
 
 @app.route('/topics/<topic>', methods=['GET'])
 def get_topic_appearances(topic):
     year = request.args.get('year')
     print(f"Got topic trend request with: year:{year} for topic:{topic}.")
     if not all([year, topic]):
-        return jsonify({"error": "Missing query parameters: year, startmonth, and/or endmonth are required."}), 400
+        return jsonify({"error": "public:  Missing query parameters: year, startmonth, and/or endmonth are required."}), 400
 
     try:
         year = int(year)
     except ValueError:
-        return jsonify({"error": "Query parameter year must be integer."}), 400
-
+        return jsonify({"error": " public: Query parameter year must be integer."}), 400
+    topic_stats = None
     try:
-        url = 'http://trends-engine-service:5001/get_topic_trend'  # Adjust the URL based on your setup
+        url = f'http://{TRENDS_ENGINE_SERVICE_NAME}:{TRENDS_ENGINE_SERVICE_PORT}/get_topic_trend'  # Adjust the URL based on your setup
         params = {
             'topic': topic,
             'year': year,
@@ -34,14 +32,16 @@ def get_topic_appearances(topic):
         
         # Extract only the trend_score from each topic stats
         topic_stats = response.json()
-        trend_scores_only = [{'topic': ts['topic'], 'trend_score': ts['trend_score']} for ts in topic_stats]
+        print(topic_stats)
+        topic_stats_sorted = sorted(topic_stats.items(), key=lambda x: int(x[0]))
+        trend_scores_only = {month: stats["trend_score"] for month, stats in topic_stats_sorted }
         
         return jsonify(trend_scores_only), 200
     
     except Exception as e:
-        return jsonify({"error": f"public: Failed to fetch topics: {e}"}), 500
+        return jsonify({"error": f"public: Failed to fetch topics: {e}. Topic stats: {topic_stats}"}), 500
 
-@app.route('/get_k_topics_by_date', methods=['GET'])
+@app.route('/topics/get_k_topics_by_date', methods=['GET'])
 def get_k_topics_by_date():
     # Extracting query parameters
     k = request.args.get('k')
@@ -66,7 +66,7 @@ def get_k_topics_by_date():
         return jsonify({"error": str(e)}), 400
 
     try:
-        url = 'http://trends-engine-service:5001/get_k_topics_by_date'  # Adjust the URL based on your setup
+        url = f'http://{TRENDS_ENGINE_SERVICE_NAME}:{TRENDS_ENGINE_SERVICE_PORT}/get_k_topics_by_date'  # Adjust the URL based on your setup
         print(k, start_date.strftime("%Y%m%d"),end_date.strftime("%Y%m%d"))
         params = {
             'k': k,
