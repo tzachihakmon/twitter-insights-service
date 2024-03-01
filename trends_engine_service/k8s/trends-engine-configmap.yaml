@@ -6,3 +6,7 @@ data:
   exclude_phrases: "new,twitter,midnight,10,two,second,night,friday,morning,first,sunday,thursday,summer,saturday,monday,1st,today,tonight,one,less than 24 hours,tbt,the day,1,month of the year,next week,last day,one day,this week,the week,next year,this year,the year,last night's,last night,all day,every day,tomorrow,yesterday,weekend,the weekend,this weekend,everyday,last night,last week,last year,this day,2016,2017,100,2nd,30,20,4th,2015,24 hours,13,7th,2013,2012,2,4 hours"
   topic_repository_service_name: "topic-repository-service"
   topic_repository_servce_port: "5002"
+  share_score_factor: "0.35"
+  like_score_factor: "0.05"
+  frequency_score_factor: "0.20"
+  author_frequency_score: "0.40"

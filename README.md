@@ -32,9 +32,13 @@ kubectl get pods
 kubectl get services
 
 ## deploy topic repository service
-kubectl apply -f topic_repository_module/k8s/topic-repository-configmap.yaml
+### Deploy
+kubectl apply -f topic_repository_service/k8s/topic-repository-configmap.yaml
 kubectl apply -f topic_repository_service/k8s/topic-repository-deployment.yaml
+kubectl apply -f topic_repository_service/k8s/topic-repository-service-hpa.yaml
 kubectl apply -f topic_repository_service/k8s/topic-repository-service.yaml
+
+### check
 kubectl get deployments
 kubectl get pods
 kubectl get services
@@ -42,28 +46,37 @@ kubectl logs trends-public-api-deployment-{some_prfix taken from get pods }
 trends-public-api-configmap
 
 
-## initial topic ingestor job
-kubectl apply -f topic_repository_module/k8s/topic-repository-deployment.yaml
+## deploy topic ingestor job
+### Deploy
+kubectl apply -f topics_ingestor_job/k8s/topics-ingestor-configmap.yaml
 kubectl apply -f topics_ingestor_job/k8s/topics-ingestor-job.yaml
+
+### check
 kubectl get jobs
 kubectl get pods 
 kubectl logs topics-ingestor{some_prfix taken from get pods }
 
 ## deploy public api service
+### Deploy
 kubectl apply -f trends_public_api_service/k8s/trends-public-api-configmap.yaml
 kubectl apply -f trends_public_api_service/k8s/trends-public-api-deployment.yaml
+kubectl apply -f trends_public_api_service/k8s/trends-public-api-hpa.yaml
 kubectl apply -f trends_public_api_service/k8s/trends-public-api-service.yaml
+
+### check
 kubectl get deployments
 kubectl get pods
 kubectl get services
 kubectl logs trends-public-api-deployment-{some_prfix taken from get pods }
-trends-public-api-configmap
 
 ## deploy trends engine service
-kubectl apply -f topic_repository_module/k8s/topic-repository-configmap.yaml
+### Deploy
 kubectl apply -f trends_engine_service/k8s/trends-engine-configmap.yaml
 kubectl apply -f trends_engine_service/k8s/trends-engine-deployment.yaml
+kubectl apply -f trends_engine_service/k8s/trends-engine-service-hpa.yaml
 kubectl apply -f trends_engine_service/k8s/trends-engine-service.yaml
+
+### check
 kubectl get deployments
 kubectl get pods
 kubectl get services

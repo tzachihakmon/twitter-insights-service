@@ -1,11 +1,9 @@
 from flask import Flask, request, jsonify
-from TopicRepositoryModule import TopicsRepository  # Adjust the import statement based on your actual module name and location
 from datetime import datetime
 import requests
 import os
 
 app = Flask(__name__)
-topics_repository = TopicsRepository()
 TRENDS_ENGINE_SERVICE_NAME = os.getenv("TRENDS_ENGINE_SRVICE_NAME")
 TRENDS_ENGINE_SERVICE_PORT = os.getenv("TRENDS_ENGINE_SRVICE_PORT")
 

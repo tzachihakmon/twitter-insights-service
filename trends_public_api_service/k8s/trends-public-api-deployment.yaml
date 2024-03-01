@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: trends-public-api-deployment
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: trends-public-api

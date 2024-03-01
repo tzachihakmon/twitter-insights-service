@@ -7,6 +7,10 @@ exclude_phrases_str = os.getenv("exclude_phrases", "")
 EXCLUDE_PHRASES = set(exclude_phrases_str.split(",")) if exclude_phrases_str != "" else {"twitter", "midnight", "10","two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday","weekend", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
 TOPICS_REPOSITORY_SERVICE_NAME = os.getenv("topic_repository_service_name", "topic-repository-service")
 TOPICS_REPOSITORY_SERVICE_PORT = os.getenv("topic_repository_servce_port", "5002")
+share_score_factor = int(os.getenv("share_score_factor", "0.35"))
+like_score_factor = int(os.getenv("like_score_factor", "0.05"))
+frequency_score_factor = int(os.getenv("frequency_score_factor", "0.20"))
+author_frequency_score = int(os.getenv("author_frequency_score", "0.40"))
 
 @dataclass
 class TopicStats:
@@ -99,7 +103,7 @@ class TopicsTrendsEngine:
             result = self._get_topics_by_month(start.year, start.month, start.day, end.day)
             for row in result:
                 topic = row["topic"]
-                if(topic not in EXCLUDE_PHRASES):
+                if(topic not in EXCLUDE_PHRASES and (not topic.startswith("http")) and not topic.isdigit()):
                     if topic not in topic_stats:
                         print(f"inserting topic: {topic}")
                         topic_stats[topic] = TopicStats(topic=topic)
@@ -142,5 +146,5 @@ class TopicsTrendsEngine:
         topic_score_object.like_score = stats.total_likes / most_likes if most_likes else 0
         topic_score_object.frequency_score = stats.total_tweets / most_frequent if most_frequent else 0
         topic_score_object.author_frequency_score = len(stats.distinct_authors) / most_distinct_authors if most_distinct_authors else 0
-        topic_score_object.trend_score = (0.35 * topic_score_object.share_score) + (0.05*topic_score_object.like_score) + (0.20*topic_score_object.frequency_score) + (0.40*topic_score_object.author_frequency_score)
+        topic_score_object.trend_score = (share_score_factor * topic_score_object.share_score) + (like_score_factor*topic_score_object.like_score) + (frequency_score_factor*topic_score_object.frequency_score) + (author_frequency_score*topic_score_object.author_frequency_score)
         return topic_score_object
