@@ -20,6 +20,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: trends-public-api-service
+            name: tweets-public-api-service
             port:
-              number: 80
+              number: 8080
