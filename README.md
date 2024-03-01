@@ -96,8 +96,15 @@ helm repo update
 ### deployment 
 1. install nginx-ingress Conroller:
 helm install nginx-ingress ingress-nginx/ingress-nginx --namespace kube-system
-2. kubectl apply -f ingressclass.yam
-3. kubectl apply -f k8s/ingress.yaml
+2. kubectl apply -f ingress/k8s/ingressclass.yaml
+3. kubectl apply -f ingress/k8s/ingress.yaml
 4. check logs: 
 kubectl get pods --all-namespaces
 kubectl logs {nginx_pod_name} -n kube-system
+
+
+## deploy tweets public api service
+### Deploy
+kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-configmap.yaml
+kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-deployment.yaml
+\kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-service.yaml
