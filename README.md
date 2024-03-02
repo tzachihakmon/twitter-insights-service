@@ -1,9 +1,7 @@
 This is my first flask k8s app
-
-# Docker images creation:
-From the repo root dir open pwsh an run:
-
+# Insights Engine K8s cluster bootstrap
 ## build images
+From the repo root dir open pwsh an run:
 ### topics ingestor
 - docker build -f topics_ingestor/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
 ### public- api
@@ -107,4 +105,4 @@ kubectl logs {nginx_pod_name} -n kube-system
 ### Deploy
 kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-configmap.yaml
 kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-deployment.yaml
-\kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-service.yaml
+kubectl apply -f tweets_public_api_service/k8s/tweets-public-api-service.yaml
