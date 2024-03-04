@@ -5,12 +5,11 @@ FROM python:3.8-slim
 WORKDIR /usr/src/twitter-app/topics_ingestor_job
 
 # Copy the current directory contents into the container at /usr/src/app
-COPY ./topics_ingestor .
+COPY ./topics_ingestor_job .
 COPY ./topic_repository_service .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r ingestor-requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm
 
 # Define environment variable

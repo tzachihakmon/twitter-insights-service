@@ -3,9 +3,9 @@ This is my first flask k8s app
 ## build images
 From the repo root dir open pwsh an run:
 ### topics ingestor
-- docker build -f topics_ingestor/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
+- docker build --no-cache -f topics_ingestor_job/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
 ### public- api
-- docker build -f trends_public_api_service/Dockerfile -t {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-servic
+- docker build --no-cache -f trends_public_api_service/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-trends-public-api-servic
 ### trends-engine
 docker build --no-cache -f trends_engine_service/Dockerfile -t tzachioy/twitterinsightservice1-trends-engine-service .
 ### topic-repository

@@ -10,8 +10,6 @@ spec:
         image: tzachioy/twitterinsightservice1-topics_ingestor-job:latest
         envFrom:
           - configMapRef:
-              name: topic-repository-config
-          - configMapRef:
-              name: topics-ingestor-job
+              name: topics-ingestor-config
         imagePullPolicy: Always
       restartPolicy: Never

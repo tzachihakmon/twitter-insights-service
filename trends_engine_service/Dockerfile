@@ -9,7 +9,6 @@ COPY ./trends_engine_service .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r topic-repo-requirements.txt
 
 # Define environment variable
 ENV NAME World

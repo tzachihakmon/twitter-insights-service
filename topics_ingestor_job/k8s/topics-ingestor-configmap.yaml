@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: trends-engine-config
+  name: topics-ingestor-config
 data:
   topic_repository_service_name: "topic-repository-service"
   topic_repository_servce_port: "5002"
