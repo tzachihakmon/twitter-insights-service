@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from TopicRepositoryModule import TopicsRepository, Topic 
 
 app = Flask(__name__)
-repo = TopicsRepository()  # Instantiate your repository
+repo = TopicsRepository()
 
 @app.route('/repotopics/insert_topics', methods=['POST'])
 def insert_topics():

@@ -6,7 +6,7 @@ from cassandra.cluster import Cluster
 import os
 from dataclasses import dataclass
 
-CASSANDRA_HOSTS =  [os.getenv('cassandra_host', 'cassandra')] #  ["127.0.0.1"]  # Assuming 'cassandra' is the name of your Cassandra service in Kubernetes
+CASSANDRA_HOSTS =  [os.getenv('cassandra_host', 'cassandra')]
 KEYSPACE = os.getenv('cassandra_topics_key_space', 'tweets_topics_1')
 topic_trends_table = os.getenv('cassandra_topics_trends_table', 'topic_trends3')
 topics_by_time_table = os.getenv('cassandra_topics_by_time_table', 'topics_by_time4')  

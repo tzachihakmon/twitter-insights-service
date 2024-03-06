@@ -7,10 +7,10 @@ exclude_phrases_str = os.getenv("exclude_phrases", "")
 EXCLUDE_PHRASES = set(exclude_phrases_str.split(",")) if exclude_phrases_str != "" else {"twitter", "midnight", "10","two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday","weekend", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"}
 TOPICS_REPOSITORY_SERVICE_NAME = os.getenv("topic_repository_service_name", "topic-repository-service")
 TOPICS_REPOSITORY_SERVICE_PORT = os.getenv("topic_repository_servce_port", "5002")
-share_score_factor = int(os.getenv("share_score_factor", "0.35"))
-like_score_factor = int(os.getenv("like_score_factor", "0.05"))
-frequency_score_factor = int(os.getenv("frequency_score_factor", "0.20"))
-author_frequency_score = int(os.getenv("author_frequency_score", "0.40"))
+share_score_factor = float(os.getenv("share_score_factor", "0.35"))
+like_score_factor = float(os.getenv("like_score_factor", "0.05"))
+frequency_score_factor = float(os.getenv("frequency_score_factor", "0.20"))
+author_frequency_score = float(os.getenv("author_frequency_score", "0.40"))
 
 @dataclass
 class TopicStats:

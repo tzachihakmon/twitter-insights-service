@@ -7,12 +7,11 @@ app = Flask(__name__)
 TRENDS_ENGINE_SERVICE_NAME = os.getenv("TRENDS_ENGINE_SRVICE_NAME")
 TRENDS_ENGINE_SERVICE_PORT = os.getenv("TRENDS_ENGINE_SRVICE_PORT")
 
-@app.route('/topics/<topic>', methods=['GET'])
-def get_topic_appearances(topic):
-    year = request.args.get('year')
+@app.route('/topics/<topic>/yeartrend/<year>', methods=['GET'])
+def get_topic_appearances(topic, year):
     print(f"Got topic trend request with: year:{year} for topic:{topic}.")
     if not all([year, topic]):
-        return jsonify({"error": "public:  Missing query parameters: year, startmonth, and/or endmonth are required."}), 400
+        return jsonify({"error": "public:  Missing request parameters: year, and topic are required."}), 400
 
     try:
         year = int(year)
@@ -28,7 +27,6 @@ def get_topic_appearances(topic):
         print(f"out going request to: {url} with params: {params}")
         response = requests.get(url, params=params)
         
-        # Extract only the trend_score from each topic stats
         topic_stats = response.json()
         print(topic_stats)
         topic_stats_sorted = sorted(topic_stats.items(), key=lambda x: int(x[0]))
@@ -39,7 +37,7 @@ def get_topic_appearances(topic):
     except Exception as e:
         return jsonify({"error": f"public: Failed to fetch topics: {e}. Topic stats: {topic_stats}"}), 500
 
-@app.route('/topics/get_k_topics_by_date', methods=['GET'])
+@app.route('/topics/get_top_k_trended_topics_by_date', methods=['GET'])
 def get_k_topics_by_date():
     # Extracting query parameters
     k = request.args.get('k')

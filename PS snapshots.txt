@@ -1,0 +1,195 @@
+## Initialization snapshot 
+### builds 
+
+PS C:\src\flask-app> docker build --no-cache -f topics_ingestor_job/Dockerfile -t tzachioy/twitterinsightservice1-topics_ingestor-job .                   
+[+] Building 47.3s (12/12) FINISHED                                                                                                                             docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                      0.0s
+ => => transferring dockerfile: 649B                                                                                                                                      0.0s 
+ => [internal] load metadata for docker.io/library/python:3.8-slim                                                                                                        1.2s 
+ => [auth] library/python:pull token for registry-1.docker.io                                                                                                             0.0s
+ => [internal] load .dockerignore                                                                                                                                         0.0s
+ => => transferring context: 2B                                                                                                                                           0.0s 
+ => [1/6] FROM docker.io/library/python:3.8-slim@sha256:23252009f10b4af8a8c90409c54a866473a251b001b74902f04631dd54cfccc8                                                  0.0s 
+ => [internal] load build context                                                                                                                                         0.4s 
+ => => transferring context: 7.91MB                                                                                                                                       0.4s 
+ => CACHED [2/6] WORKDIR /usr/src/twitter-app/topics_ingestor_job                                                                                                         0.0s 
+ => [3/6] COPY ./topics_ingestor_job .                                                                                                                                    0.0s
+ => [4/6] COPY ./topic_repository_service .                                                                                                                               0.0s
+ => [5/6] RUN pip install --no-cache-dir -r ingestor-requirements.txt                                                                                                    36.4s 
+ => [6/6] RUN python -m spacy download en_core_web_sm                                                                                                                     8.5s
+ => exporting to image                                                                                                                                                    0.6s
+ => => exporting layers                                                                                                                                                   0.6s
+ => => writing image sha256:03cd77e4914d511382b3aed9927d9e8f77cde5de4142d746cd905b40a159dc78                                                                              0.0s
+ => => naming to docker.io/tzachioy/twitterinsightservice1-topics_ingestor-job                                                                                            0.0s
+View build details: docker-desktop://dashboard/build/default/default/7000xwv8338tya22bosm953n4
+
+  PS C:\src\flask-app> docker build --no-cache -f trends_public_api_service/Dockerfile -t tzachioy/twitterinsightservice1-trends-public-api-service .
+[+] Building 23.2s (10/10) FINISHED                                                                                                                             docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                      0.0s
+ => => transferring dockerfile: 560B                                                                                                                                      0.0s 
+ => [internal] load metadata for docker.io/library/python:3.8-slim                                                                                                        1.3s 
+ => [auth] library/python:pull token for registry-1.docker.io                                                                                                             0.0s
+ => [internal] load .dockerignore                                                                                                                                         0.0s
+ => => transferring context: 2B                                                                                                                                           0.0s 
+ => [1/4] FROM docker.io/library/python:3.8-slim@sha256:23252009f10b4af8a8c90409c54a866473a251b001b74902f04631dd54cfccc8                                                  0.0s 
+ => [internal] load build context                                                                                                                                         0.0s 
+ => => transferring context: 6.49kB                                                                                                                                       0.0s 
+ => CACHED [2/4] WORKDIR /usr/src/twitter-app/public-api                                                                                                                  0.0s 
+ => [3/4] COPY ./trends_public_api_service .                                                                                                                              0.0s 
+ => [4/4] RUN pip install --no-cache-dir -r requirements.txt                                                                                                             21.6s 
+ => exporting to image                                                                                                                                                    0.1s
+ => => exporting layers                                                                                                                                                   0.1s 
+ => => writing image sha256:90341a3771f61d2d8be377347728fb2cd7afbc55e813dbe5d7e91c9f480c865e                                                                              0.0s 
+ => => naming to docker.io/tzachioy/twitterinsightservice1-trends-public-api-service                                                                                      0.0s 
+View build details: docker-desktop://dashboard/build/default/default/ih2vz4j9du673uqjqogtkd5yq
+  
+  
+  
+  PS C:\src\flask-app> docker build --no-cache -f trends_engine_service/Dockerfile -t tzachioy/twitterinsightservice1-trends-engine-service .
+[+] Building 7.5s (9/9) FINISHED                                                                                                                                docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                      0.0s
+ => => transferring dockerfile: 546B                                                                                                                                      0.0s
+ => [internal] load metadata for docker.io/library/python:3.8-slim                                                                                                        0.6s
+ => [internal] load .dockerignore                                                                                                                                         0.0s
+ => => transferring context: 2B                                                                                                                                           0.0s
+ => [1/6] FROM docker.io/library/python:3.8-slim@sha256:23252009f10b4af8a8c90409c54a866473a251b001b74902f04631dd54cfccc8                                                  0.0s
+ => [internal] load build context                                                                                                                                         0.0s
+ => => transferring context: 25.04kB                                                                                                                                      0.0s
+ => CACHED [2/4] WORKDIR /usr/src/app                                                                                                                                     0.0s
+ => [3/4] COPY ./trends_engine_service .                                                                                                                                  0.1s
+ => [4/4] RUN pip install --no-cache-dir -r requirements.txt                                                                                                              6.4s
+ => exporting to image                                                                                                                                                    0.2s
+ => => exporting layers                                                                                                                                                   0.2s
+ => => writing image sha256:d577455ee70737d9f2cfd80b64bac254efe11863db31956decece144020455a0                                                                              0.0s
+ => => naming to docker.io/tzachioy/twitterinsightservice1-trends-engine-service                                                                                          0.0s
+View build details: docker-desktop://dashboard/build/default/default/ru9p3tpmoxmw8rooylaaazx1z
+
+
+PS C:\src\flask-app> docker build --no-cache -f topic_repository_service/Dockerfile -t tzachioy/twitterinsightservice1-topic-repository-service .  
+[+] Building 23.1s (9/9) FINISHED                                                                                                                               docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                      0.0s
+ => => transferring dockerfile: 550B                                                                                                                                      0.0s
+ => [internal] load metadata for docker.io/library/python:3.8-slim                                                                                                        0.5s
+ => [internal] load .dockerignore                                                                                                                                         0.0s
+ => => transferring context: 2B                                                                                                                                           0.0s
+ => [1/4] FROM docker.io/library/python:3.8-slim@sha256:23252009f10b4af8a8c90409c54a866473a251b001b74902f04631dd54cfccc8                                                  0.0s
+ => [internal] load build context                                                                                                                                         0.0s 
+ => => transferring context: 19.98kB                                                                                                                                      0.0s 
+ => CACHED [2/4] WORKDIR /usr/src/app                                                                                                                                     0.0s 
+ => [3/4] COPY ./topic_repository_service .                                                                                                                               0.0s 
+ => [4/4] RUN pip install --no-cache-dir -r requirements.txt                                                                                                             22.2s 
+ => exporting to image                                                                                                                                                    0.3s
+ => => exporting layers                                                                                                                                                   0.3s
+ => => writing image sha256:961ee214637d4dfd5413719dff85b186a7468afc19b7dec1f6ede6d08b143335                                                                              0.0s
+ => => naming to docker.io/tzachioy/twitterinsightservice1-topic-repository-service                                                                                       0.0s
+View build details: docker-desktop://dashboard/build/default/default/bjcnxpz44n790c5067psc70t2
+
+
+### images push
+PS C:\src\flask-app> docker push tzachioy/twitterinsightservice1-topics_ingestor-job                  
+Using default tag: latest
+The push refers to repository [docker.io/tzachioy/twitterinsightservice1-topics_ingestor-job]
+47900d2dde88: Pushed
+832cc58d39c2: Pushed
+70b64a690cb6: Pushed
+dccde4bd3ef7: Pushed
+a59207349f16: Pushed
+f781eff46d90: Layer already exists
+2a8032964840: Layer already exists
+7e8a58af8c84: Layer already exists
+ba473bfdf54e: Layer already exists
+ceb365432eec: Layer already exists
+latest: digest: sha256:65a9a1e376236acd2ef07822b0113e6deb9e3060fb3279b1b1e2de1b09877c8f size: 2420
+
+
+PS C:\src\flask-app> docker push tzachioy/twitterinsightservice1-trends-public-api-service                  
+Using default tag: latest
+The push refers to repository [docker.io/tzachioy/twitterinsightservice1-trends-public-api-service]
+144617557fe0: Pushed
+41a8de378f03: Layer already exists
+dcb9c56de641: Layer already exists
+f781eff46d90: Layer already exists
+2a8032964840: Layer already exists
+7e8a58af8c84: Layer already exists
+ba473bfdf54e: Layer already exists
+ceb365432eec: Layer already exists
+latest: digest: sha256:24606bd8dd2fec599821d00fc5d0fa476287547efce338d62b9dad185526408b size: 1996
+
+
+PS C:\src\flask-app> docker push tzachioy/twitterinsightservice1-trends-engine-service
+Using default tag: latest
+The push refers to repository [docker.io/tzachioy/twitterinsightservice1-trends-engine-service]
+8981213ff21b: Pushed
+a72ce30491a4: Pushed
+e1e83a1c7c2a: Layer already exists
+f781eff46d90: Layer already exists
+2a8032964840: Layer already exists
+7e8a58af8c84: Layer already exists
+ba473bfdf54e: Layer already exists
+ceb365432eec: Layer already exists
+latest: digest: sha256:69dfa09082801f695421456112f60a49e6d64438f67a21a10b1b377b964241f8 size: 1996
+
+
+PS C:\src\flask-app> docker push tzachioy/twitterinsightservice1-topic-repository-service
+Using default tag: latest
+The push refers to repository [docker.io/tzachioy/twitterinsightservice1-topic-repository-service]
+7d15cf2a131c: Pushed
+4ab8053c8f4c: Pushed
+e1e83a1c7c2a: Layer already exists
+f781eff46d90: Layer already exists
+2a8032964840: Layer already exists
+7e8a58af8c84: Layer already exists
+ba473bfdf54e: Layer already exists
+ceb365432eec: Layer already exists
+latest: digest: sha256:731773ea23a977f25876d75d83f866694dec3d70e389c5311dee5562293e5a92 size: 1997
+
+
+
+
+## k8s cluster deployment
+PS C:\src\flask-app> kubectl apply -f cassandra/k8s/cassandra-statefulset.yaml
+statefulset.apps/cassandra created
+PS C:\src\flask-app> kubectl apply -f cassandra/k8s/cassandra-service.yaml    
+service/cassandra created
+PS C:\src\flask-app> kubectl apply -f topic_repository_service/k8s/topic-repository-configmap.yaml 
+configmap/topic-repository-config created
+PS C:\src\flask-app> kubectl apply -f topic_repository_service/k8s/topic-repository-deployment.yaml
+deployment.apps/topic-repository-deployment created
+PS C:\src\flask-app> kubectl apply -f topic_repository_service/k8s/topic-repository-service-hpa.yaml
+horizontalpodautoscaler.autoscaling/topic-repository-hpa unchanged
+PS C:\src\flask-app> kubectl apply -f topic_repository_service/k8s/topic-repository-service.yaml    
+service/topic-repository-service created
+PS C:\src\flask-app> kubectl apply -f topics_ingestor_job/k8s/topics-ingestor-configmap.yaml    
+configmap/topics-ingestor-config created
+PS C:\src\flask-app> kubectl apply -f topics_ingestor_job/k8s/topics-ingestor-job.yaml      
+job.batch/topics-ingestor created
+PS C:\src\flask-app> kubectl apply -f trends_public_api_service/k8s/trends-public-api-configmap.yaml
+configmap/api-config created
+PS C:\src\flask-app> kubectl apply -f trends_public_api_service/k8s/trends-public-api-deployment.yaml
+deployment.apps/trends-public-api-deployment created
+PS C:\src\flask-app> kubectl apply -f trends_public_api_service/k8s/trends-public-api-hpa.yaml
+horizontalpodautoscaler.autoscaling/trends-public-api-hpa created
+PS C:\src\flask-app> kubectl apply -f trends_public_api_service/k8s/trends-public-api-service.yaml
+service/trends-public-api-service created
+PS C:\src\flask-app> kubectl apply -f trends_engine_service/k8s/trends-engine-configmap.yaml      
+configmap/trends-engine-config created
+PS C:\src\flask-app> kubectl apply -f trends_engine_service/k8s/trends-engine-deployment.yaml
+deployment.apps/trends-engine-deployment created
+PS C:\src\flask-app> kubectl apply -f trends_engine_service/k8s/trends-engine-service-hpa.yaml
+horizontalpodautoscaler.autoscaling/trends-engine-hpa created
+PS C:\src\flask-app> kubectl apply -f trends_engine_service/k8s/trends-engine-service.yaml
+service/trends-engine-service created
+
+PS C:\src\flask-app> kubectl get pods
+NAME                                            READY   STATUS      RESTARTS   AGE
+cassandra-0                                     1/1     Running     0          3h38m
+topic-repository-deployment-f56b455bc-47x94     1/1     Running     0          3h37m
+topic-repository-deployment-f56b455bc-f6bzc     1/1     Running     0          3h37m
+topic-repository-deployment-f56b455bc-nkck6     1/1     Running     0          3h37m
+topics-ingestor-pnpwb                           0/1     Completed   0          13m
+trends-engine-deployment-c5fb8b54d-6bwwf        1/1     Running     0          115m
+trends-engine-deployment-c5fb8b54d-7v7rw        1/1     Running     0          115m
+trends-engine-deployment-c5fb8b54d-wr9t8        1/1     Running     0          115m
+trends-public-api-deployment-54469555c5-bzg4b   1/1     Running     0          3h35m
+trends-public-api-deployment-54469555c5-lckxw   1/1     Running     0          3h35m
+trends-public-api-deployment-54469555c5-r5wlw   1/1     Running     0          3h35m

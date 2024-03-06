@@ -2,6 +2,13 @@ import requests
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
+import os
+
+
+# Replace with your actual API endpoint
+API_ENDPOINT = 'http://127.0.0.1:80//topics//get_top_k_trended_topics_by_date'
+EXCLUDE_PHRASES = ["two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"]
+DIR_NAME = "visualization_results_samples/top25-trended-visualization"
 
 def get_month_start_end_dates(year):
     """Returns the start and end dates for each month of the given year."""
@@ -22,12 +29,6 @@ def get_month_start_end_dates(year):
         }
     return month_dates
 
-
-# Replace with your actual API endpoint
-API_ENDPOINT = 'http://127.0.0.1:80//topics//get_k_topics_by_date'
-EXCLUDE_PHRASES = ["two", "second", "night","friday", "morning", "first", "sunday", "thursday", "summer","saturday","monday", "1st", "today", "tonight", "one", "less than 24 hours", "tbt", "the day","1", "month of the year", "next week", "last day","one day", "this week","the week", "next year", "this year", "the year", "last night's" ,"last night", "all day","every day", "tomorrow", "yesterday", "the weekend", "this weekend","everyday" ,"last night","last week", "last year", "this day"]
-
-
 # Loop through each month, make API calls, and generate word clouds
 for year in range(2012,2018):
     month_dates_year = get_month_start_end_dates(year)
@@ -41,7 +42,6 @@ for year in range(2012,2018):
             # Making a GET request to the API
             response = requests.get(API_ENDPOINT, params=params)
             data = response.json()
-
             # Extract topics and their trend scores, excluding certain phrases
             word_frequencies = {item['topic']: item['trend_score'] for item in data if item['topic'] not in EXCLUDE_PHRASES}
 
@@ -53,28 +53,10 @@ for year in range(2012,2018):
             plt.imshow(wordcloud, interpolation='bilinear')
             plt.axis('off')
             # Save the word cloud to a PNG file
-            plt.savefig(f"top25-visoalization/top25_topics_of_year_{year}_month_{month}.png")
+            year_dir = f"{DIR_NAME}/{year}"
+            if not os.path.exists(year_dir):
+                os.makedirs(year_dir)
+            plt.savefig(f"{year_dir}/top25_topics_of_year_{year}_month_{month}.png")
             plt.close()  # C
         except Exception as ex:
             print(f'failed to get top 25 topics for year:{year} and month:{month}. error: {ex}')
-
-'''params = {
-    'k': 25,
-    'start_date': "20170201",
-    'end_date': "20170228"
-}
-# Making a GET request to your API
-response = requests.get(API_ENDPOINT, params=params)
-data = response.json()
-
-# Extracting topics and their trend scores
-word_frequencies = {item['topic']: item['trend_score'] for item in data if item['topic'] not in EXCLUDE_PHRASES}
-
-# Generating the word cloud
-wordcloud = WordCloud(width=800, height=400, stopwords= EXCLUDE_PHRASES ).generate_from_frequencies(word_frequencies)
-
-# Displaying the word cloud
-plt.figure(figsize=(10, 5))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis('off')
-plt.show()'''

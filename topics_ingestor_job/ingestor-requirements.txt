@@ -1,2 +1,8 @@
 spacy
 python-dateutil
+datetime
+requests
+dataclasses
+Flask
+gevent
+cassandra-driver

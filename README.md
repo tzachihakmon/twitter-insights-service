@@ -1,29 +1,37 @@
-This is my first flask k8s app
-# Insights Engine K8s cluster bootstrap
+# Repo Sturctue
+1. Namespace for each component on our k8s cluster(cassandra,ingress, topic_repository_serrvice, topics_ingestor job, trends_engine_service, trends_public_api_service, tweets_public_api_service).
+Each namespace contains docker and k8s sub dirs that are relevant for the k8s component.
+2. Visualization_result_samples - dir with hundreds of visualized output of our service endpoints. 
+3. two script(per trends api endpoints) to fetch topic trends insights from our service, create visualizations and save them to Visualization_result_samples dir. 
+4. Ex summary. 
+
+# Insights Engine K8s cluster Deployment proccess
 ## build images
 From the repo root dir open pwsh an run:
 ### topics ingestor
 - docker build --no-cache -f topics_ingestor_job/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topics_ingestor-job .
 ### public- api
-- docker build --no-cache -f trends_public_api_service/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-trends-public-api-servic
+- docker build --no-cache -f trends_public_api_service/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-trends-public-api-service .
 ### trends-engine
-docker build --no-cache -f trends_engine_service/Dockerfile -t tzachioy/twitterinsightservice1-trends-engine-service .
+docker build --no-cache -f trends_engine_service/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-trends-engine-service .
 ### topic-repository
-docker build --no-cache -f topic_repository_service/Dockerfile -t tzachioy/twitterinsightservice1-topic-repository-service .
+docker build --no-cache -f topic_repository_service/Dockerfile -t {your_docker_hub_user_name}/twitterinsightservice1-topic-repository-service .
 
 ## Publish images to docker hub repository
 ### topics ingestor
 - docker push {your_docke_hub_user_name}/twitterinsightservice1-topics_ingestor-job
 ### public- api
-- docker push {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-servic
+- docker push {your_docke_hub_user_name}/twitterinsightservice1-trends-public-api-service
 ### trends-engine
-- docker push tzachioy/twitterinsightservice1-trends-engine-service
+- docker push {your_docker_hub_user_name}/twitterinsightservice1-trends-engine-service
 ### topic-repository
-- docker push tzachioy/twitterinsightservice1-topic-repository-service
+- docker push {your_docker_hub_user_name}/twitterinsightservice1-topic-repository-service
 
 # k8s steps:
+Notice: containers images are fetched from tzachioy repository. If you would like to fetch them from your own docker hub repo, you should adjust k8s deployment files accordingly.
 ## initial cassandra cluster: 
 kubectl apply -f cassandra/k8s/cassandra-statefulset.yaml
+kubectl apply -f cassandra/k8s/cassandra-service.yaml
 
 ## Check that cassandra running gracefully with 
 kubectl get pods 

@@ -4,6 +4,6 @@ metadata:
   name: topic-repository-config
 data:
   cassandra_host: "cassandra"
-  cassandra_topics_key_space: "tweets_topics"
-  cassandra_topics_trends_table: "topic_trends"
-  cassandra_topics_by_time_table: "topics_by_time"
+  cassandra_topics_key_space: "tweets_topics_1"
+  cassandra_topics_trends_table: "topic_trends3"
+  cassandra_topics_by_time_table: "topics_by_time4"

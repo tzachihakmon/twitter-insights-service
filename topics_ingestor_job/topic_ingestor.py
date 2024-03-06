@@ -62,8 +62,12 @@ def PopulateCassandraTopicsTables():
         i+=1
 
 def insert_topics(topics):
-    url = f'http://{TOPICS_REPOSITORY_SERVICE_NAME}:{TOPICS_REPOSITORY_SERVICE_PORT}/repotopics/insert_topics'  # Adjust the URL based on your setup
-    requests.post(url, json=topics)
+    try:
+        if(len(topics) != 0):
+            url = f'http://{TOPICS_REPOSITORY_SERVICE_NAME}:{TOPICS_REPOSITORY_SERVICE_PORT}/repotopics/insert_topics'  # Adjust the URL based on your setup
+            requests.post(url, json=topics)
+    except Exception as ex:
+        print(f"Failed to publish topics to repo. Topics: {topics}")
 
 def main():
     PopulateCassandraTopicsTables()
